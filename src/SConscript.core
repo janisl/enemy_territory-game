@@ -243,12 +243,6 @@ botlib_objs = []
 for i in botlib_list:
 	botlib_objs.append( botlib_env.StaticObject( os.path.join( 'botlib', i ) ) )
 
-staticx11_libs = [ 'libXxf86dga.a', 'libXxf86vm.a' ]
-if ( os.path.exists( os.path.join( '/usr/lib', staticx11_libs[0] ) ) ):
-	staticx11_libs = [ os.path.join( '/usr/lib', i ) for i in staticx11_libs ]
-else:
-	staticx11_libs = [ os.path.join( '/usr/X11R6/lib', i ) for i in staticx11_libs ]
-
 if ( g_os == 'Linux' ):
 	nasm_env = Environment( tools = [ 'nasm' ] )
 	nasm_env['ASFLAGS'] = '-f elf'
@@ -269,7 +263,7 @@ local_env = g_env.Clone()
 if ( g_os == 'Linux' ):
 	local_env.Append( LIBS = [ 'dl' ] )
 	if ( local_dedicated == 0 ):
-		local_env.Append( LIBS = [ 'X11', 'Xext', 'm' ] )
+		local_env.Append( LIBS = [ 'X11', 'Xext', 'm', 'Xxf86dga', 'Xxf86vm' ] )
 		local_env.Append( LIBPATH = [ '/usr/X11R6/lib' ] )
 		local_env.Append( CPPPATH = [ 'curl-7.12.2/include' ] )
 	else:
@@ -321,7 +315,6 @@ if ( local_dedicated == 0 ):
 	if ( g_os == 'Linux' ):
 		source_list += snd_mixa
 		source_list += linux_full_sources
-		source_list += staticx11_libs
 	if ( g_os == 'win32' ):
 		source_list += win32_full_sources
 else:
