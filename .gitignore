@@ -1,1 +1,6 @@
 build
+*.vcxproj.user
+*.suo
+*.sdf
+Debug
+Release
