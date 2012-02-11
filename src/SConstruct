@@ -11,7 +11,7 @@ import scons_utils
 conf_filename='site.conf'
 # choose configuration variables which should be saved between runs
 # ( we handle all those as strings )
-serialized=[ 'CC', 'CXX', 'JOBS', 'BUILD', 'BUILD_ROOT', 'DEDICATED', 'TARGET_CORE', 'TARGET_BSPC', 'TARGET_CGAME', 'TARGET_GAME', 'TARGET_UI', 'MASTER' ]
+serialized=[ 'CC', 'CXX', 'JOBS', 'BUILD', 'BUILD_ROOT', 'TARGET_CGAME', 'TARGET_GAME', 'TARGET_UI' ]
 
 # help -------------------------------------------
 
@@ -41,18 +41,6 @@ BUILD (default debug)
 	debug: -O -g
 	release: all optimisations, including CPU target etc.
 	
-DEDICATED (default 2)
-	Control regular / dedicated type of build:
-	0 - client
-	1 - dedicated server
-	2 - both
-
-TARGET_CORE (default 1)
-	Build engine
-
-TARGET_BSPC (default 0)
-	Build bspc utility
-
 TARGET_GAME (default 1)
 	Build game module
 
@@ -67,9 +55,6 @@ BUILD_ROOT (default 'build')
 	
 NOCONF (default 0, not saved)
 	ignore site configuration and use defaults + command line only
-
-MASTER (default '')
-	set to override the default master server address
 
 COPYBINS (default 0, not saved)
 	copy the binaries in a ready-to-release format
@@ -121,15 +106,11 @@ CC = 'gcc -m32'
 CXX = 'g++ -m32'
 JOBS = '1'
 BUILD = 'debug'
-DEDICATED = '2'
-TARGET_CORE = '1'
 TARGET_GAME = '1'
 TARGET_CGAME = '1'
 TARGET_UI = '1'
-TARGET_BSPC = '0'
 BUILD_ROOT = 'build'
 NOCONF = '0'
-MASTER = ''
 COPYBINS = '0'
 BUILDMPBIN = '0'
 
@@ -287,12 +268,7 @@ if ( int(JOBS) > 1 ):
 
 # mark the globals
 
-local_dedicated = 0
-# curl
-local_curl = 0	# config selection
-curl_lib = []
-
-GLOBALS = 'g_env OS g_os BUILD local_dedicated curl_lib local_curl MASTER gcc3 cpu'
+GLOBALS = 'g_env OS g_os BUILD gcc3 cpu'
 
 # end general configuration ----------------------
 
@@ -314,43 +290,6 @@ if g_os == 'win32' and os.name != 'nt':
 # targets ----------------------------------------
 
 toplevel_targets = []
-
-# build curl if needed
-if ( TARGET_CORE == '1' and DEDICATED != '1' and OS != 'Darwin' ):
-	# 1: debug, 2: release
-	if ( BUILD == 'release' ):
-		local_curl = 2
-	else:
-		local_curl = 1
-	Export( 'GLOBALS ' + GLOBALS )
-	curl_lib = SConscript( 'SConscript.curl' )
-
-if ( TARGET_CORE == '1' ):
-	if ( DEDICATED == '0' or DEDICATED == '2' ):
-		local_dedicated = 0
-		Export( 'GLOBALS ' + GLOBALS )
-		BuildDir( g_build + '/core', '.', duplicate = 0 )
-		et = SConscript( g_build + '/core/SConscript.core' )
-		if ( g_os == 'win32' ):
-			toplevel_targets.append( InstallAs( '#et.exe', et ) )
-		else:
-			toplevel_targets.append( InstallAs( '#et.' + cpu, et ) )
-
-	if ( DEDICATED == '1' or DEDICATED == '2' ):
-		local_dedicated = 1
-		Export( 'GLOBALS ' + GLOBALS )
-		BuildDir( g_build + '/dedicated', '.', duplicate = 0 )
-		etded = SConscript( g_build + '/dedicated/SConscript.core' )
-		if ( g_os == 'win32' ):
-			toplevel_targets.append( InstallAs( '#etded.exe', etded ) )
-		else:
-			toplevel_targets.append( InstallAs( '#etded.' + cpu, etded ) )
-
-if ( TARGET_BSPC == '1' ):
-	Export( 'GLOBALS ' + GLOBALS )
-	BuildDir( g_build + '/bspc', '.', duplicate = 0 )
-	bspc = SConscript( g_build + '/bspc/SConscript.bspc' )
-	toplevel_targets.append( InstallAs( '#bspc.' + cpu, bspc ) )
 
 if ( TARGET_GAME == '1' ):
 	Export( 'GLOBALS ' + GLOBALS )
