@@ -5,7 +5,7 @@ if(COMMAND cmake_policy)
 	cmake_policy(SET CMP0003 NEW)
 endif(COMMAND cmake_policy)
 
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -pipe -fmessage-length=0")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -pipe -fmessage-length=0 -fvisibility=hidden")
 set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -D_DEBUG")
 set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -Winline -ffast-math -fomit-frame-pointer -finline-functions -fschedule-insns2")
 
