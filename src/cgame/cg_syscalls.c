@@ -33,14 +33,11 @@ If you have questions concerning this license or the applicable additional terms
 static intptr_t ( QDECL * syscall )( int arg, ... ) = ( int ( QDECL * )( int, ... ) ) - 1;
 
 #if __GNUC__ >= 4
-#pragma GCC visibility push(default)
+__attribute__((visibility("default")))
 #endif
 void dllEntry( intptr_t ( QDECL  *syscallptr )( int arg,... ) ) {
 	syscall = syscallptr;
 }
-#if __GNUC__ >= 4
-#pragma GCC visibility pop
-#endif
 
 /*int PASSFLOAT( float x ) {
 	float	floatTemp;

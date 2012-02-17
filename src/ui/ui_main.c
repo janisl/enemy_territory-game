@@ -267,12 +267,9 @@ void _UI_Refresh( int realtime );
 qboolean _UI_IsFullscreen( void );
 
 #if __GNUC__ >= 4
-#pragma GCC visibility push(default)
+__attribute__((visibility("default")))
 #endif
 intptr_t vmMain( int command, intptr_t arg0, intptr_t arg1, intptr_t arg2, intptr_t arg3, intptr_t arg4, intptr_t arg5, intptr_t arg6, intptr_t arg7, intptr_t arg8, intptr_t arg9, intptr_t arg10, intptr_t arg11  ) {
-#if __GNUC__ >= 4
-#pragma GCC visibility pop
-#endif
 
 	switch ( command ) {
 	case UI_GETAPIVERSION:
