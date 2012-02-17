@@ -600,7 +600,7 @@ float Q_rsqrt( float f );       // reciprocal square root
 // fast float to int conversion
 #if id386 && !( ( defined __linux__ || defined __FreeBSD__ || defined __GNUC__ ) && ( defined __i386__ ) ) // rb010123
 long myftol( float f );
-#elif defined( __MACOS__ )
+#elif defined( __MACOS__ ) || defined(_WIN64)
 #define myftol( x ) (long)( x )
 #else
 extern long int lrintf( float x );

@@ -1,6 +1,6 @@
 build
+ipch
 *.vcxproj.user
 *.suo
 *.sdf
-Debug
-Release
+*.opensdf
